@@ -1,0 +1,7 @@
+{
+    "code-runner.executorMap": {
+        "c": "cd \"$workspaceRoot\"; mingw32-make run"
+    },
+    "code-runner.runInTerminal": true,
+    "code-runner.saveAllFilesBeforeRun": true
+}
