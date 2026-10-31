@@ -1,9 +1,9 @@
 CC     = gcc
-CFLAGS = -Wall -Wextra -g -MMD -MP
+CFLAGS = -O0 -Wall -Wextra -g -MMD -MP
 BUILD  = build
 TARGET = $(BUILD)/prog.exe
 
-SRC = main.c $(wildcard DataTypes/*/*.c)
+SRC = src/main.c $(wildcard src/*/*.c) # $(wildcard src/DataTypes/*/*.c)
 OBJ = $(SRC:%.c=$(BUILD)/%.o)
 
 $(TARGET): $(OBJ)

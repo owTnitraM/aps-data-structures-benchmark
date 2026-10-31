@@ -6,7 +6,7 @@ END = datetime(2026, 1, 1, 0, 0, 0)   # exclusive
 TOTAL_SECONDS = int((END - START).total_seconds())
 N = 100000
 SEED = 50
-OUTPUT_FILE = f"Data/timestamps_100k.txt"
+OUTPUT_FILE = f"../data/timestamps_100k.txt"
 TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 random.seed(SEED)

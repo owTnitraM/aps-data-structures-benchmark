@@ -1,4 +1,6 @@
 *.exe
 *.o
 *.d
+.vscode
 programa
+src/main.c
