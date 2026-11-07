@@ -1,14 +1,14 @@
 #include "AVLTree.h"
+#include "../../Timestamp/Timestamp.h"
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
-static int height(const AVLNode *node) {
+static int nodeHeight(const AVLNode *node) {
     return node == NULL ? 0 : node->height;
 }
 
-static int max(int a, int b) {
+static int maxHeight(int a, int b) {
     return a > b ? a : b;
 }
 
@@ -16,9 +16,9 @@ static void updateHeight(AVLNode *node) {
     if (node == NULL)
         return;
 
-    node->height = 1 + max(
-        height(node->left),
-        height(node->right)
+    node->height = 1 + maxHeight(
+        nodeHeight(node->left),
+        nodeHeight(node->right)
     );
 }
 
@@ -26,7 +26,7 @@ static int balanceFactor(const AVLNode *node) {
     if (node == NULL)
         return 0;
 
-    return height(node->left) - height(node->right);
+    return nodeHeight(node->left) - nodeHeight(node->right);
 }
 
 static AVLNode *rotateLeft(AVLNode *node) {
@@ -63,7 +63,7 @@ static AVLNode *rebalance(AVLNode *node) {
 
     int balance = balanceFactor(node);
 
-    // Desbalanceamento à esquerda
+    /* Desbalanceamento a esquerda */
     if (balance > 1) {
         if (balanceFactor(node->left) < 0)
             node->left = rotateLeft(node->left);
@@ -71,7 +71,7 @@ static AVLNode *rebalance(AVLNode *node) {
         return rotateRight(node);
     }
 
-    // Desbalanceamento à direita
+    /* Desbalanceamento a direita */
     if (balance < -1) {
         if (balanceFactor(node->right) > 0)
             node->right = rotateRight(node->right);
@@ -96,11 +96,26 @@ static AVLNode *createNode(time_t value) {
     return node;
 }
 
+AVLTree *avlCreate(void) {
+    AVLTree *tree = malloc(sizeof(AVLTree));
+
+    if (tree == NULL)
+        return NULL;
+
+    tree->root = NULL;
+    tree->size = 0;
+    tree->heapAllocated = 1;
+
+    return tree;
+}
+
 void avlInit(AVLTree *tree) {
     if (tree == NULL)
         return;
 
     tree->root = NULL;
+    tree->size = 0;
+    tree->heapAllocated = 0;
 }
 
 static AVLNode *insertNode(
@@ -117,14 +132,16 @@ static AVLNode *insertNode(
         return newNode;
     }
 
-    if (value < node->value) {
+    int comparison = timestamp_compare(value, node->value);
+
+    if (comparison < 0) {
         node->left = insertNode(
             node->left,
             value,
             inserted
         );
     }
-    else if (value > node->value) {
+    else if (comparison > 0) {
         node->right = insertNode(
             node->right,
             value,
@@ -132,7 +149,7 @@ static AVLNode *insertNode(
         );
     }
     else {
-        // Valores duplicados não são inseridos
+        /* Valores duplicados nao sao inseridos */
         return node;
     }
 
@@ -151,6 +168,9 @@ int avlInsert(AVLTree *tree, time_t value) {
         &inserted
     );
 
+    if (inserted)
+        tree->size++;
+
     return inserted;
 }
 
@@ -161,10 +181,15 @@ AVLNode *avlLocate(const AVLTree *tree, time_t value) {
     AVLNode *current = tree->root;
 
     while (current != NULL) {
-        if (value == current->value)
+        int comparison = timestamp_compare(
+            value,
+            current->value
+        );
+
+        if (comparison == 0)
             return current;
 
-        if (value < current->value)
+        if (comparison < 0)
             current = current->left;
         else
             current = current->right;
@@ -188,14 +213,16 @@ static AVLNode *removeNode(
     if (node == NULL)
         return NULL;
 
-    if (value < node->value) {
+    int comparison = timestamp_compare(value, node->value);
+
+    if (comparison < 0) {
         node->left = removeNode(
             node->left,
             value,
             removed
         );
     }
-    else if (value > node->value) {
+    else if (comparison > 0) {
         node->right = removeNode(
             node->right,
             value,
@@ -205,7 +232,7 @@ static AVLNode *removeNode(
     else {
         *removed = 1;
 
-        // Nó sem filhos ou com apenas um filho
+        /* No sem filhos ou com apenas um filho */
         if (node->left == NULL || node->right == NULL) {
             AVLNode *child = node->left != NULL
                 ? node->left
@@ -215,7 +242,7 @@ static AVLNode *removeNode(
             return child;
         }
 
-        // Nó com dois filhos
+        /* No com dois filhos */
         AVLNode *successor = findMinNode(node->right);
 
         node->value = successor->value;
@@ -244,7 +271,60 @@ int avlRemove(AVLTree *tree, time_t value) {
         &removed
     );
 
+    if (removed)
+        tree->size--;
+
     return removed;
+}
+
+static void listAscendingNode(
+    const AVLNode *node,
+    time_t *out,
+    size_t capacity,
+    size_t *index
+) {
+    if (node == NULL || *index >= capacity)
+        return;
+
+    listAscendingNode(
+        node->left,
+        out,
+        capacity,
+        index
+    );
+
+    if (*index >= capacity)
+        return;
+
+    out[*index] = node->value;
+    (*index)++;
+
+    listAscendingNode(
+        node->right,
+        out,
+        capacity,
+        index
+    );
+}
+
+size_t avlListAscending(
+    const AVLTree *tree,
+    time_t *out,
+    size_t capacity
+) {
+    if (tree == NULL || out == NULL || capacity == 0)
+        return 0;
+
+    size_t index = 0;
+
+    listAscendingNode(
+        tree->root,
+        out,
+        capacity,
+        &index
+    );
+
+    return index;
 }
 
 static void destroyNode(AVLNode *node) {
@@ -263,39 +343,29 @@ void avlDestroy(AVLTree *tree) {
 
     destroyNode(tree->root);
     tree->root = NULL;
+    tree->size = 0;
+
+    /* So libera a struct se ela foi criada por avlCreate. */
+    if (tree->heapAllocated)
+        free(tree);
 }
 
 void avlPrintNode(const AVLNode *node) {
     if (node == NULL) {
-        printf("Node nao encontrado.\n");
+        printf("Node not found.");
         return;
     }
 
-    struct tm *date = localtime(&node->value);
+    char buffer[TIMESTAMP_STR_SIZE];
 
-    if (date == NULL) {
-        printf("Data invalida");
-        return;
-    }
-
-    char buffer[32];
-
-    if (strftime(
-        buffer,
-        sizeof(buffer),
-        "%d/%m/%Y %H:%M:%S",
-        date
-    ) == 0) {
-        printf("Data invalida");
-        return;
-    }
+    timestamp_to_string(node->value, buffer);
 
     printf("%s", buffer);
 }
 
 void avlPrintBrute(const AVLNode *node) {
     if (node == NULL) {
-        printf("Node nao encontrado.\n");
+        printf("Node not found.");
         return;
     }
 
@@ -306,9 +376,8 @@ static void printPrefix(
     const int *branches,
     int depth
 ) {
-    for (int i = 0; i < depth; i++) {
+    for (int i = 0; i < depth; i++)
         printf(branches[i] ? "│   " : "    ");
-    }
 }
 
 static void printTreeNode(
@@ -331,7 +400,7 @@ static void printTreeNode(
         avlPrintNode(node);
 
     printf(
-        " [h=%d, FB=%d]\n",
+        " [h=%d, BF=%d]\n",
         node->height,
         balanceFactor(node)
     );
@@ -363,14 +432,14 @@ static void printTree(const AVLTree *tree, int brute) {
         return;
 
     if (tree->root == NULL) {
-        printf("Arvore vazia.\n");
+        printf("Empty tree.\n");
         return;
     }
 
     printf(
         brute
-            ? "\n========== ARVORE AVL BRUTA ==========\n\n"
-            : "\n========== ARVORE AVL ==========\n\n"
+            ? "\n========== RAW AVL TREE ==========\n\n"
+            : "\n========== AVL TREE ==========\n\n"
     );
 
     int *branches = calloc(
@@ -379,7 +448,7 @@ static void printTree(const AVLTree *tree, int brute) {
     );
 
     if (branches == NULL) {
-        printf("Erro ao alocar memoria para impressao.\n");
+        printf("Memory allocation failed.\n");
         return;
     }
 
@@ -389,7 +458,7 @@ static void printTree(const AVLTree *tree, int brute) {
         avlPrintNode(tree->root);
 
     printf(
-        " [h=%d, FB=%d] (RAIZ)\n",
+        " [h=%d, BF=%d] (ROOT)\n",
         tree->root->height,
         balanceFactor(tree->root)
     );
@@ -415,7 +484,7 @@ static void printTree(const AVLTree *tree, int brute) {
 
     free(branches);
 
-    printf("\n======================================\n");
+    printf("\n==================================\n");
 }
 
 void avlPrint(const AVLTree *tree) {
