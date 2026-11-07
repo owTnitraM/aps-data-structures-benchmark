@@ -1,6 +1,6 @@
 #include "AVLTree.h"
 #include "AVLTree.h"
-#include "Timestamp.h"
+#include "../../Timestamp/Timestamp.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -337,13 +337,9 @@ void avlPrintNode(const AVLNode *node) {
         return;
     }
 
-    char buffer[32];
+    char buffer[TIMESTAMP_STR_SIZE];
 
-    timestamp_to_string(
-        node->value,
-        buffer,
-        sizeof(buffer)
-    );
+    timestamp_to_string(node->value, buffer);
 
     printf("%s", buffer);
 }
