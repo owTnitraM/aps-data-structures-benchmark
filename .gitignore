@@ -4,3 +4,4 @@
 .vscode
 programa
 src/main.c
+output/
