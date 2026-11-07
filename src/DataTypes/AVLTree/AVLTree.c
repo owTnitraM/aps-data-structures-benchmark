@@ -1,5 +1,4 @@
 #include "AVLTree.h"
-#include "AVLTree.h"
 #include "../../Timestamp/Timestamp.h"
 
 #include <stdio.h>
