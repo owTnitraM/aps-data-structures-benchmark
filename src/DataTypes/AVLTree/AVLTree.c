@@ -63,6 +63,7 @@ static AVLNode *rebalance(AVLNode *node) {
 
     int balance = balanceFactor(node);
 
+    /* Desbalanceamento a esquerda */
     if (balance > 1) {
         if (balanceFactor(node->left) < 0)
             node->left = rotateLeft(node->left);
@@ -70,6 +71,7 @@ static AVLNode *rebalance(AVLNode *node) {
         return rotateRight(node);
     }
 
+    /* Desbalanceamento a direita */
     if (balance < -1) {
         if (balanceFactor(node->right) > 0)
             node->right = rotateRight(node->right);
@@ -102,8 +104,18 @@ AVLTree *avlCreate(void) {
 
     tree->root = NULL;
     tree->size = 0;
+    tree->heapAllocated = 1;
 
     return tree;
+}
+
+void avlInit(AVLTree *tree) {
+    if (tree == NULL)
+        return;
+
+    tree->root = NULL;
+    tree->size = 0;
+    tree->heapAllocated = 0;
 }
 
 static AVLNode *insertNode(
@@ -137,6 +149,7 @@ static AVLNode *insertNode(
         );
     }
     else {
+        /* Valores duplicados nao sao inseridos */
         return node;
     }
 
@@ -219,6 +232,7 @@ static AVLNode *removeNode(
     else {
         *removed = 1;
 
+        /* No sem filhos ou com apenas um filho */
         if (node->left == NULL || node->right == NULL) {
             AVLNode *child = node->left != NULL
                 ? node->left
@@ -228,6 +242,7 @@ static AVLNode *removeNode(
             return child;
         }
 
+        /* No com dois filhos */
         AVLNode *successor = findMinNode(node->right);
 
         node->value = successor->value;
@@ -327,7 +342,12 @@ void avlDestroy(AVLTree *tree) {
         return;
 
     destroyNode(tree->root);
-    free(tree);
+    tree->root = NULL;
+    tree->size = 0;
+
+    /* So libera a struct se ela foi criada por avlCreate. */
+    if (tree->heapAllocated)
+        free(tree);
 }
 
 void avlPrintNode(const AVLNode *node) {

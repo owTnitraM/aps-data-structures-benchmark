@@ -1,8 +1,8 @@
-#ifndef DATA_TYPES_H
-#define DATA_TYPES_H
+#ifndef DATATYPES_H
+#define DATATYPES_H
 
-#include "Vector/Vector.h"
-#include "AVLTree/AVLTree.h"
-#include "SinglyLinkedList/SinglyLinkedList.h"
+#include "DataTypes/SinglyLinkedList/SinglyLinkedList.h"
+#include "DataTypes/AVLTree/AVLTree.h"
+#include "DataTypes/Vector/Vector.h"
 
 #endif

@@ -3,8 +3,8 @@
 
 #include <time.h>
 
-#define TIMESTAMP_FORMAT "%Y-%m-%d %H:%M:%S"
-#define TIMESTAMP_STR_SIZE 20   /* "YYYY-MM-DD HH:MM:SS" + '\0' */
+/* "YYYY-MM-DD HH:MM:SS" (19 characters) + '\0' */
+#define TIMESTAMP_STR_SIZE 20
 
 /*
  * Parses a string in the format "YYYY-MM-DD HH:MM:SS" into a time_t

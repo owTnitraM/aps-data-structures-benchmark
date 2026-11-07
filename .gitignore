@@ -3,5 +3,7 @@
 *.d
 .vscode
 programa
+build/
 src/main.c
+src/temp.c
 output/
