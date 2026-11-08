@@ -1,20 +1,12 @@
 #!/bin/sh
-# tools/run_bench.sh -- compila, roda e valida o benchmark (Linux/POSIX).
+# tools/run_bench.sh - compila, roda e valida o benchmark (Linux/POSIX).
 #
-#   tools/run_bench.sh                        rodada completa  -> analysis/
-#   tools/run_bench.sh quick                  so N = 1000 e 5000
-#   tools/run_bench.sh freq_hz=3.6e9          frequencia manual
-#   tools/run_bench.sh out=analysis quick     out= e quick em qualquer ordem
-#   VALIDATE_ONLY=1 tools/run_bench.sh        nao compila nem roda: so valida
-#                                             os arquivos que ja estao em <out>
+#   tools/run_bench.sh                  rodada completa -> analysis/
+#   tools/run_bench.sh quick            so N = 1000 e 5000
+#   tools/run_bench.sh freq_hz=3.6e9    frequencia manual
+#   VALIDATE_ONLY=1 tools/run_bench.sh  so valida os arquivos ja gerados
 #
-# Faz, a partir da RAIZ do projeto (nao importa de onde voce chama):
-#   1. compila com "make build/bench.exe" (sempre -O0, via Makefile)
-#   2. roda build/bench.exe repassando os argumentos
-#   3. valida os 9 arquivos: existem, mesma maquina/rodada, mesmos N,
-#      4 colunas, nenhum zero, e mostra um resumo no terminal
-# Codigos de saida: 0 = tudo ok, 2 = ok mas com AVISO de 0 ticks,
-#                   1 = erro (compilacao, execucao ou validacao).
+# Codigos de saida: 0 = ok, 2 = ok com AVISO de 0 ticks, 1 = erro.
 
 set -u
 

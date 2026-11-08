@@ -1,15 +1,4 @@
-/*
- * test_avl.c - simple tests for the AVLTree
- *
- * Build (from the project root; keep this file outside src/):
- *   gcc -O0 -Wall -Wextra -g -Isrc tests/test_avl.c src/DataTypes/AVLTree/AVLTree.c src/Timestamp/Timestamp.c -o build/test_avl
- *
- * Run:
- *   ./build/test_avl          (Linux)
- *   build\test_avl.exe        (Windows)
- *
- * Exit code: 0 if every check passes, 1 otherwise.
- */
+/* Testes da arvore AVL. */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -130,7 +119,6 @@ static unsigned rnd(void)
 static void test_create_destroy(void)
 {
     AVLTree *t = avlCreate();
-    AVLTree s;
 
     CHECK(t != NULL);
     if (t == NULL) return;
@@ -139,19 +127,10 @@ static void test_create_destroy(void)
     avlDestroy(t);                               /* frees the struct too */
 
     avlDestroy(NULL);                            /* must not crash */
-    avlInit(NULL);
-
-    avlInit(&s);                                 /* tree owned by the caller */
-    CHECK(s.root == NULL && s.size == 0);
-    avlInsert(&s, 1);
-    avlInsert(&s, 2);
-    avlInsert(&s, 3);
-    avlDestroy(&s);
-    CHECK(s.root == NULL && s.size == 0);
-    CHECK(avlInsert(&s, 5) == 1 && s.size == 1); /* reusable after destroy */
-    avlDestroy(&s);
 
     t = avlCreate();                             /* destroy with nodes inside */
+    CHECK(t != NULL);
+    if (t == NULL) return;
     avlInsert(t, 1);
     avlInsert(t, 2);
     avlInsert(t, 3);

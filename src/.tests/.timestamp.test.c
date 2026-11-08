@@ -1,13 +1,4 @@
-/*
- * main_timestamp.c - quick check that the timestamp functions work.
- *
- * Keep this file OUTSIDE src/ (e.g. tests/) so the Makefile does not try to
- * link it together with your real main.c.
- *
- * Build (from the project root):
- *   gcc -O0 -Wall -Wextra -g -Isrc tests/main_timestamp.c src/Timestamp/Timestamp.c -o build/main_timestamp.exe
- *   build\main_timestamp.exe
- */
+/* Testes das funcoes de timestamp. */
 
 #include <stdio.h>
 #include <string.h>

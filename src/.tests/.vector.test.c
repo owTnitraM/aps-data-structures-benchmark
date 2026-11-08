@@ -1,15 +1,4 @@
-/*
- * test_vector.c - simple tests for the Vector (sorted dynamic array of time_t)
- *
- * Build (from the project root; keep this file outside src/):
- *   gcc -O0 -Wall -Wextra -g -Isrc tests/test_vector.c src/DataTypes/Vector/Vector.c src/Timestamp/Timestamp.c -o build/test_vector
- *
- * Run:
- *   ./build/test_vector          (Linux)
- *   build\test_vector.exe        (Windows)
- *
- * Exit code: 0 if every check passes, 1 otherwise.
- */
+/* Testes do Vector (array dinamico ordenado de time_t). */
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,15 +1,4 @@
-/*
- * test_singly_linked_list.c - simple tests for the SinglyLinkedList
- *
- * Build (from the project root; keep this file outside src/):
- *   gcc -O0 -Wall -Wextra -g -Isrc tests/test_singly_linked_list.c src/DataTypes/SinglyLinkedList/SinglyLinkedList.c src/Timestamp/Timestamp.c -o build/test_singly_linked_list
- *
- * Run:
- *   ./build/test_singly_linked_list          (Linux)
- *   build\test_singly_linked_list.exe        (Windows)
- *
- * Exit code: 0 if every check passes, 1 otherwise.
- */
+/* Testes da lista simplesmente encadeada. */
 
 #include <stdio.h>
 #include <stdlib.h>

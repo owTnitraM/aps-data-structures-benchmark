@@ -1,15 +1,7 @@
 /*
- * cpu_detect.h - detecta modelo e frequência base (nominal) da CPU em tempo de execução.
- *
- *   int detect_cpu(char *model, size_t model_size, double *freq_hz);
- *     Retorna 1 se achou a frequência (em *freq_hz, Hz), 0 caso contrário.
- *     O modelo é sempre preenchido ("desconhecido" se não achar).
- *
- * Windows: registro (HKLM\HARDWARE\DESCRIPTION\System\CentralProcessor\0: ~MHz e ProcessorNameString).
- * Linux:   /proc/cpuinfo (modelo) + /sys/.../cpufreq/base_frequency (intel_pstate)
- *          ou o "@ x.xxGHz" do nome do modelo (CPUs Intel). AMD/VM/WSL costumam cair
- *          no caso "não achou": nesse caso passe o valor manualmente.
- * NÃO usa a frequência atual (turbo/carga): ela muda entre execuções.
+ * cpu_detect.h - detecta modelo e frequencia base da CPU.
+ * detect_cpu() retorna 1 se achou a frequencia (em *freq_hz, Hz) e 0 caso
+ * contrario; o modelo e sempre preenchido.
  */
 #ifndef CPU_DETECT_H
 #define CPU_DETECT_H

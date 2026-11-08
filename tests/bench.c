@@ -1,92 +1,18 @@
 /*
- * tests/bench.c -- benchmark das 3 estruturas do catalogo de timestamps
+ * tests/bench.c - benchmark de insercao, remocao e listagem das tres
+ * estruturas (SLL, Vector, AVL).
  *
- * Para cada estrutura (SLL, Vector, AVL) e cada operacao obrigatoria
- * (inserir, remover, listar_ordenado) mede o custo em CICLOS de CPU por
- * operacao em funcao de N e escreve 9 arquivos de texto em <out>/ (padrao
- * analysis/) que o tools/graphs.py carrega com np.loadtxt(..., comments='#').
+ * Para cada estrutura/operacao mede os ciclos de CPU por operacao com
+ * N = 1000, 5000, 10000, 50000 e 100000, e grava 9 arquivos em analysis/
+ * no formato "n,mediana,min,max" (lido por tools/graphs.py).
  *
- * PROTOCOLO DE MEDICAO (decisoes)
+ * Uso (a partir da raiz do projeto):
+ *   build/bench.exe                 rodada completa
+ *   build/bench.exe quick           so N = 1000 e 5000
+ *   build/bench.exe freq_hz=3.6e9   frequencia manual
+ *   build/bench.exe out=<pasta>     pasta de saida
  *
- *  - N = 1000, 5000, 10000, 50000, 100000.  Com o argumento "quick" somente
- *    N = 1000 e 5000. Os mesmos valores de N (na mesma ordem) vao para os
- *    9 arquivos, para o custo ponderado 70/15/15 poder ser calculado depois.
- *
- *  - Dados: data/timestamps_100k.txt (se nao existir, tenta Data/..., que e
- *    como a pasta esta neste repositorio) e lido UMA vez para um vetor de
- *    time_t, com fgets + strip de \r\n + timestamp_parse. O generator.py ja
- *    grava o arquivo fora de ordem cronologica (ele verifica isso com
- *    assert), mas mesmo assim embaralhamos com xorshift64 de semente fixa
- *    (rand() nao: varia entre plataformas), para garantir que a ordem de
- *    chegada != ordem cronologica e que as 3 estruturas recebam exatamente a
- *    mesma sequencia, na mesma ordem, em qualquer sistema.
- *
- *  - Um ponto = custo de UMA operacao sobre uma estrutura de tamanho ~N:
- *    uma insercao, uma remocao ou uma listagem completa. Valor do ponto =
- *    ciclos cronometrados acumulados / total de operacoes.
- *
- *  - clock() tem resolucao grossa (no Windows ~1 ms ou pior) e uma operacao
- *    dura nanossegundos. Cada repeticao funciona assim:
- *      1. a resolucao do clock() e medida no inicio (t0=clock(); while
- *         (clock()==t0);) e registrada no cabecalho dos arquivos;
- *      2. lote de K = max(1, N/20) operacoes (na listagem, K = 1: uma
- *         listagem completa), mantendo o tamanho da estrutura em +/-5% de N;
- *      3. rodadas: monta a base (NAO cronometrado), cronometra o lote,
- *         reconstroi a base (NAO cronometrado); soma so os intervalos
- *         cronometrados ate >= TARGET_TICKS ticks de clock() (padrao 100)
- *         ou ate MAX_SECONDS_PER_POINT (padrao 2 s), com uma trava extra
- *         pelo relogio para nao entrar em laco infinito quando cada rodada
- *         custa menos de 1 tick;
- *      4. se o acumulado ainda for 0 ticks, grava 1 tick / total de
- *         operacoes (limite superior), avisa no stderr e escreve uma linha
- *         "# AVISO" no cabecalho do arquivo;
- *      5. uma rodada de aquecimento descartada antes das 10 repeticoes.
- *
- *    DIFERENCA DELIBERADA em relacao ao roteiro ("desfazer o lote"): a base
- *    e RECONSTRUIDA a cada rodada em vez de remover/reinserir o lote. Na SLL,
- *    reinserir no inicio muda a ordem dos nos a cada rodada e enviesaria a
- *    busca linear das rodadas seguintes; reconstruir garante que todas as
- *    rodadas usem a mesma base/distribuicao. O custo de reconstrucao fica
- *    FORA do cronometro.
- *
- *  - 10 repeticoes por ponto. Valor representativo = MEDIANA (media do 5o e
- *    do 6o valores depois de ordenar); minimo e maximo tambem sao gravados.
- *
- *  - ciclos = (ticks / CLOCKS_PER_SEC) * freq_hz / operacoes. Sempre usa a
- *    macro CLOCKS_PER_SEC. No Linux clock() mede tempo de CPU do processo
- *    (resolucao de microssegundos); no Windows mede tempo de relogio, com
- *    resolucao bem pior -- por isso o protocolo de lote/acumulo.
- *
- *  - A listagem da SLL (slListAscending) ordena a lista no lugar. Como a base
- *    e reconstruida antes de cada rodada, isso nao contamina as medidas.
- *
- *  - stdout e redirecionado para NUL (Windows) / /dev/null (Linux) antes de
- *    qualquer medicao: as listagens nunca devem medir o terminal. Todo log
- *    de progresso vai para o stderr. Nada e escrito no stdout.
- *
- *  - Compilar SEMPRE com -O0 (nenhuma otimizacao), pois o objetivo e medir a
- *    estrutura, nao o otimizador.
- *
- * TEMPO ESTIMADO (medido): a rodada COMPLETA (5 valores de N, 3 estruturas,
- * 3 operacoes, 10 repeticoes + aquecimento) levou ~38 s num i9-13900H a
- * 2,6 GHz (Linux, clock() de 1 microssegundo). Conte de 1 a 3 minutos em
- * maquinas mais lentas; no Windows clock() tem resolucao de ~1 ms e o teto
- * de 2 s por repeticao passa a pesar mais. A rodada "quick" (N = 1000 e
- * 5000) leva menos de 1 s. O custo dominante sao as remocoes no Vector e na
- * SLL com N grande (cada lote de N/20 remocoes custa O(N) por remocao).
- *
- * USO (executado a partir da raiz do projeto)
- *   build/bench.exe                          -> rodada completa em analysis/
- *   build/bench.exe quick                    -> so N = 1000 e 5000
- *   build/bench.exe freq_hz=3.6e9            -> frequencia manual
- *   build/bench.exe freq_hz=3.6e9 out=analysis
- *   (no Linux: ./build/bench.exe ...)
- *
- *   quick, freq_hz=<Hz> e out=<pasta> podem vir em qualquer ordem; um
- *   argumento desconhecido imprime o uso e termina com erro.
- *
- * O arquivo e compilado sozinho (alvo "bench" do Makefile) com os .c de src/
- * EXCETO src/main.c: dois main() quebrariam o link.
+ * Compilar com -O0: o objetivo e medir a estrutura, nao o otimizador.
  */
 
 #include <stdio.h>
@@ -427,9 +353,8 @@ static void build_base(Container *c, OpKind op, const time_t *data,
 }
 
 /*
- * Uma repeticao: devolve os ciclos por operacao.
- * Soma apenas o tempo cronometrado dos lotes; montar/reconstruir a base fica
- * fora do cronometro. *zero_ticks = 1 quando nem 1 tick foi acumulado.
+ * Uma repeticao: ciclos por operacao. Montar/reconstruir a base fica fora
+ * do cronometro.
  */
 static double measure_rep(Container *c, OpKind op, const time_t *data,
                           size_t n, const time_t *batch, size_t k,
@@ -489,8 +414,7 @@ static double measure_rep(Container *c, OpKind op, const time_t *data,
             MAX_SECONDS_PER_POINT)
             break;
 
-        /* trava de seguranca: se cada rodada custa < 1 tick, o acumulado
-         * nunca chega a TARGET_TICKS; o relogio impede o laco infinito. */
+        /* trava: o relogio impede laco infinito quando cada rodada custa < 1 tick */
         if ((double)(clock() - loop_start) / (double)CLOCKS_PER_SEC >=
             MAX_SECONDS_PER_POINT)
             break;
@@ -514,10 +438,7 @@ static int compare_double(const void *a, const void *b)
     return (x > y) - (x < y);
 }
 
-/*
- * Um ponto: aquecimento descartado + 10 repeticoes.
- * Mediana = media dos dois valores centrais (5o e 6o de 10).
- */
+/* Um ponto: aquecimento + 10 repeticoes; mediana = media dos 2 centrais. */
 static PointStats measure_point(Container *c, OpKind op, size_t n,
                                 const time_t *data, double freq_hz,
                                 time_t *batch, size_t k)
@@ -545,8 +466,7 @@ static PointStats measure_point(Container *c, OpKind op, size_t n,
     stats.min = samples[0];
     stats.max = samples[REPS_PER_POINT - 1];
 
-    /* o graphs.py usa log: nunca gravar 0 (com %.1f, 1e-9 tambem sairia
-     * como "0.0"; 0.1 e o menor valor representavel na saida) */
+    /* o graphs.py usa log: nunca gravar 0 */
     if (!(stats.median >= 0.1))
         stats.median = 0.1;
     if (!(stats.min >= 0.1))
@@ -737,8 +657,7 @@ int main(int argc, char **argv)
             fprintf(stderr, "[%d/9] %s %s\n", file_index + 1,
                     STRUCT_NAMES[s], OP_NAMES[o]);
 
-            /* abre o arquivo ANTES de medir: se a pasta nao existir,
-             * aborta imediatamente em vez de perder a rodada inteira */
+            /* abre antes de medir: se a pasta nao existir, aborta logo */
             snprintf(path, sizeof path, "%s/%s_%s.txt", out_dir,
                      STRUCT_NAMES[s], OP_NAMES[o]);
 
@@ -773,8 +692,7 @@ int main(int argc, char **argv)
                     for (j = 0; j < (int)k; j++)
                         batch[j] = data[n - k + (size_t)j];
                 } else if (o == OP_REMOVE) {
-                    /* K elementos espalhados pela ordem de insercao:
-                     * posicoes arbitrarias -> caso medio */
+                    /* K elementos espalhados pela ordem de insercao */
                     for (j = 0; j < (int)k; j++)
                         batch[j] = data[((size_t)j * n) / k];
                 }

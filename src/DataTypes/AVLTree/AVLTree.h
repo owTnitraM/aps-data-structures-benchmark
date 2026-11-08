@@ -15,28 +15,18 @@ typedef struct AVLNode {
 typedef struct AVLTree {
     AVLNode *root;
     size_t size;
-
-    /* Uso interno: indica se a struct foi alocada por avlCreate. */
-    int heapAllocated;
 } AVLTree;
 
-/* Cria uma arvore alocada no heap (libere com avlDestroy). */
 AVLTree *avlCreate(void);
-
-/* Inicializa uma arvore ja alocada pelo chamador (sem malloc). */
-void avlInit(AVLTree *tree);
+void avlDestroy(AVLTree *tree);
 
 int avlInsert(AVLTree *tree, time_t value);
 AVLNode *avlLocate(const AVLTree *tree, time_t value);
 int avlRemove(AVLTree *tree, time_t value);
-
 size_t avlListAscending(const AVLTree *tree, time_t *out, size_t capacity);
-
-void avlDestroy(AVLTree *tree);
 
 void avlPrintNode(const AVLNode *node);
 void avlPrintBrute(const AVLNode *node);
-
 void avlPrint(const AVLTree *tree);
 void avlPrintTreeBrute(const AVLTree *tree);
 

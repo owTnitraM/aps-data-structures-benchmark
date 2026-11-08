@@ -6,13 +6,12 @@ TARGET = $(BUILD)/prog.exe
 SRC = src/main.c $(wildcard src/Timestamp/*.c) $(wildcard src/DataTypes/*/*.c)
 OBJ = $(SRC:%.c=$(BUILD)/%.o)
 
-# Benchmark: tests/bench.c + os .c de src/ EXCETO src/main.c
-# (duas main() quebrariam o link). tests/cpu_detect.h e header-only.
+# Benchmark: tests/bench.c + os .c de src/ (sem src/main.c).
 BENCH_SRC = tests/bench.c $(wildcard src/Timestamp/*.c) $(wildcard src/DataTypes/*/*.c)
 BENCH_OBJ = $(BENCH_SRC:%.c=$(BUILD)/%.o)
 BENCH     = $(BUILD)/bench.exe
 
-# Comandos de shell: funcionam tanto no Linux (sh) quanto no Windows (cmd).
+# Comandos de shell compativeis com Linux e Windows.
 ifeq ($(OS),Windows_NT)
 MKDIR = if not exist "$(subst /,\,$(1))" mkdir "$(subst /,\,$(1))"
 RMDIR = if exist "$(subst /,\,$(1))" rmdir /s /q "$(subst /,\,$(1))"
@@ -36,7 +35,7 @@ $(BUILD)/%.o: %.c
 run: $(TARGET)
 	@$(call RUN,$(TARGET))
 
-# Compila e roda o benchmark. Argumentos opcionais: make bench ARGS="quick"
+# make bench ARGS="quick"
 bench: $(BENCH)
 	@$(call RUN,$(BENCH)) $(ARGS)
 
