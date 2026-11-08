@@ -545,13 +545,14 @@ static PointStats measure_point(Container *c, OpKind op, size_t n,
     stats.min = samples[0];
     stats.max = samples[REPS_PER_POINT - 1];
 
-    /* o graphs.py usa log: nunca gravar 0 nem valor negativo */
-    if (!(stats.median > 0.0))
-        stats.median = 1e-9;
-    if (!(stats.min > 0.0))
-        stats.min = 1e-9;
-    if (!(stats.max > 0.0))
-        stats.max = 1e-9;
+    /* o graphs.py usa log: nunca gravar 0 (com %.1f, 1e-9 tambem sairia
+     * como "0.0"; 0.1 e o menor valor representavel na saida) */
+    if (!(stats.median >= 0.1))
+        stats.median = 0.1;
+    if (!(stats.min >= 0.1))
+        stats.min = 0.1;
+    if (!(stats.max >= 0.1))
+        stats.max = 0.1;
 
     return stats;
 }

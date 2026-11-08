@@ -1,0 +1,2 @@
+# Mantem a pasta analysis/ no repositorio (o bench NAO cria pastas:
+# se analysis/ nao existir, ele aborta com mensagem clara).
