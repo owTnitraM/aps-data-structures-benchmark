@@ -123,8 +123,8 @@ if __name__ == "__main__":
         # n = np.array([1000, 5000, 10000, 50000, 100000])
         # y = np.array([10, 12, 13, 15, 17])
         # Exemplo 3: Simulação de comportamento Quadrático O(n^2)
-        # n = np.array([1000, 5000, 10000, 50000, 100000])
-        # y = np.array([1000000, 25000000, 100000000, 2500000000, 10000000000])
+        n = np.array([1000, 5000, 10000, 50000, 100000])
+        y = np.array([1000000, 25000000, 100000000, 2500000000, 10000000000])
         # Exemplo 4: Simulação de O(n log n) - Comum em ordenação
         # n = np.array([1000, 5000, 10000, 50000, 100000])
         # y = n * np.log(n) * np.random.uniform(0.99,1.2,5) # (Simulado com um ruído de 20%)
