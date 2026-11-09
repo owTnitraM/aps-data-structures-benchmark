@@ -139,9 +139,21 @@ if __name__ == "__main__":
         "analysis/vector_list.txt",
         "analysis/vector_remove.txt",
     ]
+    
+    complexidades = [
+        "O(log n)",
+        "O(n)",
+        "O(log n)",
+        "O(1)",
+        "O(n log n)",
+        "O(n)",
+        "O(n)",
+        "O(n)",
+        "O(n)",
+    ]
 
     # NOME_ARQUIVO = "analysis/sll_insert.txt"
-    for path in CAMINHOS:
+    for i, path in enumerate(CAMINHOS):
         NOME_ARQUIVO = path
         try:
             n, y = carregar_dados(NOME_ARQUIVO)
@@ -176,10 +188,10 @@ if __name__ == "__main__":
             nome_estrutura: str = path[9:]
             nome_estrutura = nome_estrutura[:-4]
             print(
-                f"\nConclusão Experimental: A estrutura {nome_estrutura} comporta-se como {melhor}"
+                f"\nConclusão Experimental: A estrutura {nome_estrutura} comporta-se como {melhor} | Esperado {complexidades[i]}"
             )
 
             # Passo 3: Visualização
-            # plotar_resultados(n, y, resultados, melhor, nome_estrutura)
+            plotar_resultados(n, y, resultados, melhor, nome_estrutura)
         except Exception as e:
             print(f"Erro: {e}")
