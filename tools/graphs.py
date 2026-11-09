@@ -37,20 +37,22 @@ def ajustar_lei_potencia(n, y):
 
 def ajustar_modelo(n, y, f_n):
     """
-    Método 2: Mínimos quadrados para a função f(n) específica.
-    Calcula o coeficiente de determinação R2.
+    Método 2: Mínimos quadrados em escala log (resíduo relativo).
+    Ajusta log y = log c + log f(n) e calcula o R2 no espaço log.
     """
 
-    # c = Σ(y * f(n)) / Σ(f(n)^2)
-    c = np.sum(y * f_n) / np.sum(f_n**2)
-    y_previsto = c * f_n
+    log_y = np.log(y)
+    log_f = np.log(f_n)
 
-    # Cálculo do R2
-    ss_res = np.sum((y - y_previsto) ** 2)
-    ss_tot = np.sum((y - np.mean(y)) ** 2)
+    log_c = np.mean(log_y - log_f)
+    c = np.exp(log_c)
+    log_previsto = log_f + log_c
+
+    ss_res = np.sum((log_y - log_previsto) ** 2)
+    ss_tot = np.sum((log_y - np.mean(log_y)) ** 2)
     r2 = 1.0 - (ss_res / ss_tot) if ss_tot > 0 else 0.0
 
-    return c, r2, y_previsto
+    return c, r2, c * f_n
 
 
 def analisar_complexidade(n, y):
@@ -111,7 +113,7 @@ def plotar_resultados(n, y, resultados, melhor_nome, titulo_grafico):
         c_otimo * f_linha,
         color="blue",
         linestyle="--",
-        label=f'Ajuste: {melhor_nome} (R²={resultados[melhor_nome]["r2"]:.4f})',
+        label=f'Ajuste: {melhor_nome} (R² log={resultados[melhor_nome]["r2"]:.4f})',
     )
 
     plt.title(f"Análise de Desempenho: {titulo_grafico}")
@@ -169,7 +171,7 @@ if __name__ == "__main__":
             resultados, melhor = analisar_complexidade(n, y)
             """ print("\nResultados por classe de complexidade:")
             for classe, res in resultados.items():
-                print(f" {classe:10} -> R² = {res['r2']:.6f}") """
+                print(f" {classe:10} -> R² log = {res['r2']:.6f}") """
 
             nome_estrutura: str = path[9:]
             nome_estrutura = nome_estrutura[:-4]
