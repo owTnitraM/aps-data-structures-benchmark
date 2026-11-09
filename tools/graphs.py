@@ -174,6 +174,6 @@ if __name__ == "__main__":
             print(f"\nConclusão Experimental: A estrutura comporta-se como {melhor}")
 
             # Passo 3: Visualização
-            plotar_resultados(n, y, resultados, melhor, "Operação de Inserção")
+            plotar_resultados(n, y, resultados, melhor, path[9:])
         except Exception as e:
             print(f"Erro: {e}")
