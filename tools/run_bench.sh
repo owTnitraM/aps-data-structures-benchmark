@@ -60,7 +60,7 @@ fi
 if [ "$QUICK" -eq 1 ]; then
     EXPECTED_N=2
 else
-    EXPECTED_N=5
+    EXPECTED_N=6
 fi
 
 echo
