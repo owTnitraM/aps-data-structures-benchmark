@@ -2,8 +2,8 @@
 # cpu=13th Gen Intel(R) Core(TM) i9-13900H freq_base_hz=2600000000 os=linux
 # clock_resolution_s=1e-06 repeticoes=10 metrica=mediana_de_ciclos_por_operacao
 # n,mediana_ciclos,min_ciclos,max_ciclos
-1000,36.2,31.9,38.5
-5000,27.7,26.3,28.7
-10000,28.3,26.0,29.8
-50000,25.3,25.0,26.5
-100000,26.6,25.8,27.0
+1000,34.7,30.8,38.2
+5000,27.2,25.6,28.9
+10000,26.5,26.3,27.6
+50000,24.6,23.9,30.2
+100000,25.5,23.6,31.4
