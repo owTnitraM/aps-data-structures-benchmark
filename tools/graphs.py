@@ -137,7 +137,7 @@ if __name__ == "__main__":
         "analysis/vector_list.txt",
         "analysis/vector_remove.txt",
     ]
-    
+
     # NOME_ARQUIVO = "analysis/sll_insert.txt"
     for path in CAMINHOS:
         NOME_ARQUIVO = path
@@ -163,17 +163,21 @@ if __name__ == "__main__":
 
             # Passo 1: Lei de Potência
             k_exp, c_pot = ajustar_lei_potencia(n, y)
-            print(f"Expoente k estimado (log-log): {k_exp:.4f}")
+            # print(f"Expoente k estimado (log-log): {k_exp:.4f}")
 
             # Passo 2: Teste de classes específicas
             resultados, melhor = analisar_complexidade(n, y)
-            print("\nResultados por classe de complexidade:")
+            """ print("\nResultados por classe de complexidade:")
             for classe, res in resultados.items():
-                print(f" {classe:10} -> R² = {res['r2']:.6f}")
+                print(f" {classe:10} -> R² = {res['r2']:.6f}") """
 
-            print(f"\nConclusão Experimental: A estrutura comporta-se como {melhor}")
+            nome_estrutura: str = path[9:]
+            nome_estrutura = nome_estrutura[:-4]
+            print(
+                f"\nConclusão Experimental: A estrutura {nome_estrutura} comporta-se como {melhor}"
+            )
 
             # Passo 3: Visualização
-            plotar_resultados(n, y, resultados, melhor, path[9:])
+            # plotar_resultados(n, y, resultados, melhor, nome_estrutura)
         except Exception as e:
             print(f"Erro: {e}")
