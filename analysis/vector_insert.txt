@@ -1,9 +1,9 @@
 # estrutura=vector operacao=insert
 # cpu=13th Gen Intel(R) Core(TM) i9-13900H freq_base_hz=2600000000 os=linux
-# clock_resolution_s=1e-06 repeticoes=10 metrica=mediana_de_ciclos_por_operacao
+# clock_resolution_s=3e-06 repeticoes=10 metrica=mediana_de_ciclos_por_operacao
 # n,mediana_ciclos,min_ciclos,max_ciclos
-1000,422.0,390.0,529.5
-5000,1045.2,988.0,1175.2
-10000,2376.4,2345.2,2532.4
-50000,11930.9,11869.5,12591.3
-100000,23941.3,23854.0,24330.3
+1000,1365.0,1248.0,1495.0
+5000,3177.2,2714.4,3556.8
+10000,5444.4,4087.2,11726.0
+50000,21746.4,18958.2,38684.9
+100000,46312.5,41692.6,76634.5
