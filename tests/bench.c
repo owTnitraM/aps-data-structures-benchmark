@@ -39,7 +39,7 @@ static const char *const DATA_CANDIDATES[] = {
     "Data/timestamps_100k.txt"
 };
 
-static const int N_FULL[]  = { 1000, 5000, 10000, 50000, 75000, 100000 };
+static const int N_FULL[]  = { 1000, 5000, 10000, 25000, 50000, 75000, 100000 };
 static const int N_QUICK[] = { 1000, 5000 };
 
 /* ---------------------------- tipos -------------------------------------- */

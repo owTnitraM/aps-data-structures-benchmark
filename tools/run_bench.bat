@@ -79,8 +79,8 @@ if errorlevel 1 (
 
 rem ------------------------------------------------------------------- validar
 :validate
-set "EXPECTED=6"
-set "NLIST=1000 5000 10000 50000 75000 100000"
+set "EXPECTED=7"
+set "NLIST=1000 5000 10000 25000 50000 75000 100000"
 if "%QUICK%"=="1" (
     set "EXPECTED=2"
     set "NLIST=1000 5000"
