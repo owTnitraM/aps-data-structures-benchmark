@@ -11,4 +11,3 @@ output/
 # Saida do benchmark: numeros de UMA rodada em UMA maquina.
 # Nao versionar (cada grupo/maquina gera os seus): rode "make bench"
 # e use os arquivos localmente. A pasta em si fica versionada (ver .gitkeep).
-# analysis/*.txt

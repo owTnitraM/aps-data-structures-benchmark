@@ -1,0 +1,9 @@
+# estrutura=avl operacao=remove
+# cpu=13th Gen Intel(R) Core(TM) i9-13900H freq_base_hz=2600000000 os=linux
+# clock_resolution_s=1e-06 repeticoes=10 metrica=mediana_de_ciclos_por_operacao
+# n,mediana_ciclos,min_ciclos,max_ciclos
+1000,750.3,715.0,787.4
+5000,1071.2,1029.6,1164.8
+10000,1170.0,1149.2,1248.0
+50000,1853.8,1786.7,2512.6
+100000,2471.3,2043.1,3061.8
