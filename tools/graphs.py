@@ -78,7 +78,9 @@ def analisar_complexidade(n, y):
     return resultados, melhor_nome
 
 
-def plotar_resultados(n, y, resultados, melhor_nome, titulo_grafico):
+def plotar_resultados(
+    n, y, resultados, melhor_nome, titulo_grafico, complex_esperada: str
+):
     """
     Gera o gráfico comparativo.
     """
@@ -112,8 +114,15 @@ def plotar_resultados(n, y, resultados, melhor_nome, titulo_grafico):
         n_linha,
         c_otimo * f_linha,
         color="blue",
-        linestyle="--",
+        linestyle="-",
         label=f'Ajuste: {melhor_nome} (R² log={resultados[melhor_nome]["r2"]:.4f})',
+    )
+    plt.plot(
+        n_linha,
+        c_otimo * f_linha,
+        color="blue",
+        linestyle="-",
+        label=f"Esperado: {complex_esperada}",
     )
 
     plt.title(f"Análise de Desempenho: {titulo_grafico}")
@@ -139,7 +148,7 @@ if __name__ == "__main__":
         "analysis/vector_list.txt",
         "analysis/vector_remove.txt",
     ]
-    
+
     complexidades = [
         "O(log n)",
         "O(n)",
@@ -192,6 +201,8 @@ if __name__ == "__main__":
             )
 
             # Passo 3: Visualização
-            plotar_resultados(n, y, resultados, melhor, nome_estrutura)
+            plotar_resultados(
+                n, y, resultados, melhor, nome_estrutura, complexidades[i]
+            )
         except Exception as e:
             print(f"Erro: {e}")
