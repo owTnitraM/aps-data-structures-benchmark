@@ -2,7 +2,7 @@
 # tools/run_bench.sh - compila, roda e valida o benchmark (Linux/POSIX).
 #
 #   tools/run_bench.sh                  rodada completa -> analysis/
-#   tools/run_bench.sh quick            so N = 1000 e 5000
+#   tools/run_bench.sh quick            so N = 10000 e 25000
 #   tools/run_bench.sh freq_hz=3.6e9    frequencia manual
 #   VALIDATE_ONLY=1 tools/run_bench.sh  so valida os arquivos ja gerados
 #
@@ -60,7 +60,7 @@ fi
 if [ "$QUICK" -eq 1 ]; then
     EXPECTED_N=2
 else
-    EXPECTED_N=7
+    EXPECTED_N=5
 fi
 
 echo
