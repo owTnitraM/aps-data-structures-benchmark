@@ -2,7 +2,7 @@
 rem tools\run_bench.bat -- compila, roda e valida o benchmark (Windows).
 rem
 rem   tools\run_bench.bat                        rodada completa  -> analysis\
-rem   tools\run_bench.bat quick                  so N = 1000 e 5000
+rem   tools\run_bench.bat quick                  so N = 10000 e 25000
 rem   tools\run_bench.bat freq_hz=3.6e9          frequencia manual
 rem   tools\run_bench.bat out=analysis quick     out= e quick em qualquer ordem
 rem   set VALIDATE_ONLY=1 ^&^& tools\run_bench.bat  nao compila nem roda: so valida
@@ -79,11 +79,11 @@ if errorlevel 1 (
 
 rem ------------------------------------------------------------------- validar
 :validate
-set "EXPECTED=7"
-set "NLIST=1000 5000 10000 25000 50000 75000 100000"
+set "EXPECTED=5"
+set "NLIST=10000 25000 50000 75000 100000"
 if "%QUICK%"=="1" (
     set "EXPECTED=2"
-    set "NLIST=1000 5000"
+    set "NLIST=10000 25000"
 )
 
 echo.
