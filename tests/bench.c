@@ -3,8 +3,8 @@
  * estruturas (SLL, Vector, AVL).
  *
  * Para cada estrutura/operacao mede os ciclos de CPU por operacao com
- * N = 10000, 20000, 30000, 40000, 50000, 60000, 80000, 90000, 100000,
- * 125000 e 150000, e grava 9 arquivos em analysis/
+ * N = 10000, 20000, 30000, 40000, 50000, 60000, 80000, 90000 e 100000,
+ * e grava 9 arquivos em analysis/
  * no formato "n,mediana,min,max" (lido por tools/graphs.py).
  *
  * Uso (a partir da raiz do projeto):
@@ -41,7 +41,7 @@ static const char *const DATA_CANDIDATES[] = {
 };
 
 static const int N_FULL[]  = { 10000, 20000, 30000, 40000, 50000, 60000, 80000,
-                               90000, 100000, 125000, 150000 };
+                               90000, 100000 };
 static const int N_QUICK[] = { 10000, 20000 };
 
 /* ---------------------------- tipos -------------------------------------- */
