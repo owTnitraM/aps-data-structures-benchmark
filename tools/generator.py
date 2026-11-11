@@ -4,9 +4,9 @@ from datetime import datetime, timedelta
 START = datetime(1980, 1, 1, 0, 0, 0)
 END = datetime(2026, 1, 1, 0, 0, 0)   # exclusivo
 TOTAL_SECONDS = int((END - START).total_seconds())
-N = 100000
+N = 150000
 SEED = 50
-OUTPUT_FILE = f"../data/timestamps_100k.txt"
+OUTPUT_FILE = f"../Data/timestamps_150k.txt"
 TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 random.seed(SEED)

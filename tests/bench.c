@@ -3,12 +3,13 @@
  * estruturas (SLL, Vector, AVL).
  *
  * Para cada estrutura/operacao mede os ciclos de CPU por operacao com
- * N = 10000, 25000, 50000, 75000 e 100000, e grava 9 arquivos em analysis/
+ * N = 10000, 20000, 30000, 40000, 50000, 60000, 80000, 90000, 100000,
+ * 125000 e 150000, e grava 9 arquivos em analysis/
  * no formato "n,mediana,min,max" (lido por tools/graphs.py).
  *
  * Uso (a partir da raiz do projeto):
  *   build/bench.exe                 rodada completa
- *   build/bench.exe quick           so N = 10000 e 25000
+ *   build/bench.exe quick           so N = 10000 e 20000
  *   build/bench.exe freq_hz=3.6e9   frequencia manual
  *   build/bench.exe out=<pasta>     pasta de saida
  *
@@ -35,12 +36,13 @@
 #define MAX_POINTS            16
 
 static const char *const DATA_CANDIDATES[] = {
-    "data/timestamps_100k.txt",
-    "Data/timestamps_100k.txt"
+    "data/timestamps_150k.txt",
+    "Data/timestamps_150k.txt"
 };
 
-static const int N_FULL[]  = { 10000, 25000, 50000, 75000, 100000 };
-static const int N_QUICK[] = { 10000, 25000 };
+static const int N_FULL[]  = { 10000, 20000, 30000, 40000, 50000, 60000, 80000,
+                               90000, 100000, 125000, 150000 };
+static const int N_QUICK[] = { 10000, 20000 };
 
 /* ---------------------------- tipos -------------------------------------- */
 
@@ -483,7 +485,7 @@ static void print_usage(const char *program)
 {
     fprintf(stderr,
             "uso: %s [quick] [freq_hz=<Hz>] [out=<pasta>]\n"
-            "  quick         usa apenas N = 10000 e 25000 (teste rapido)\n"
+            "  quick         usa apenas N = 10000 e 20000 (teste rapido)\n"
             "  freq_hz=<Hz>  sobrescreve a frequencia detectada "
             "(ex.: freq_hz=3.6e9)\n"
             "  out=<pasta>   pasta dos 9 arquivos de resultado "
@@ -612,8 +614,8 @@ int main(int argc, char **argv)
 
     data_path = find_data_file();
     if (data_path == NULL)
-        fatal("nao encontrei data/timestamps_100k.txt nem "
-              "Data/timestamps_100k.txt (rode a partir da raiz do projeto)");
+        fatal("nao encontrei data/timestamps_150k.txt nem "
+              "Data/timestamps_150k.txt (rode a partir da raiz do projeto)");
 
     data = load_timestamps(data_path, &total);
     if (data == NULL)
