@@ -197,7 +197,7 @@ if __name__ == "__main__":
             nome_estrutura: str = path[9:]
             nome_estrutura = nome_estrutura[:-4]
             print(
-                f"\nConclusão Experimental: A estrutura {nome_estrutura} comporta-se como {melhor} | Esperado {complexidades[i]}"
+                f"\nConclusão: {nome_estrutura} comporta-se como {melhor} | Esperado {complexidades[i]} | {"Correto" if melhor == complexidades[i] else "Errado!"}"
             )
 
             # Passo 3: Visualização
